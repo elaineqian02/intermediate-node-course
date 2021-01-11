@@ -9,7 +9,6 @@ mongoose.connect('mongodb://localhost/userData')
 const app= express();
 app.use(bodyParser.json());
 
-
 app.listen(port, ()=>{
 	console.log(`server is listening on port:${port}`)
 })
@@ -59,7 +58,35 @@ app.route('/users/:id')
 
 // UPDATE
 .put((req,res)=>{
-  // User.findByIdAndUpdate()
+  User.findByIdAndUpdate(
+    req.params.id,
+    {
+      name:req.body.newData.name,
+      email:req.body.newData.email,
+      password:req.body.newData.password
+    },
+    {
+      new:true
+    },
+    (err,data)=>{
+      if (err){
+        res.json({
+          success: false,
+          message: err
+        })
+      } else if (!data){
+        res.json({
+          success: false,
+          message: "Not Found"
+        })
+      } else {
+        res.json({
+          success: true,
+          data: data
+        })
+      }
+    }
+  )
 })
 
 // DELETE
